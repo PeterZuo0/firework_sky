@@ -211,6 +211,30 @@ function launchFireworkAt(x, y) {
     }
 }
 
+// === 新增：把按7后的逻辑提取到一个函数里 ===
+function startAnimationMode() {
+    // 开启声音触发烟花模式
+    soundFireworkEnabled = true;
+
+    // 播放视频、GIF
+    video.loop();
+    video2.loop();
+    gifPerson = createImg('assets/透明底.gif');
+    gifPerson.position(0, -50);
+
+    // 请求全屏
+    let fsElement = document.documentElement;
+    if (fsElement.requestFullscreen) {
+        fsElement.requestFullscreen();
+    } else if (fsElement.mozRequestFullScreen) {
+        fsElement.mozRequestFullScreen();
+    } else if (fsElement.webkitRequestFullscreen) {
+        fsElement.webkitRequestFullscreen();
+    } else if (fsElement.msRequestFullscreen) {
+        fsElement.msRequestFullscreen();
+    }
+}
+
 function keyPressed() {
     if (key === ' ') {
         if (nonBlackPixels.length > 0) {
@@ -227,25 +251,10 @@ function keyPressed() {
     }
 
     if (key === '7') {
-        // === 新增：开启声音触发烟花模式 ===
-        soundFireworkEnabled = true;
-
-        // 原有播放视频、GIF、全屏逻辑
-        video.loop();
-        video2.loop();
-        gifPerson = createImg('assets/透明底.gif');
-        gifPerson.position(0, -50);
-        let fsElement = document.documentElement;
-        if (fsElement.requestFullscreen) {
-            fsElement.requestFullscreen();
-        } else if (fsElement.mozRequestFullScreen) {
-            fsElement.mozRequestFullScreen();
-        } else if (fsElement.webkitRequestFullscreen) {
-            fsElement.webkitRequestFullscreen();
-        } else if (fsElement.msRequestFullscreen) {
-            fsElement.msRequestFullscreen();
-        }
+        // === 修改：改为调用 startAnimationMode() ===
+        startAnimationMode();
     }
+
 
     if(key === '8'){
         video.loop(); // 播放视频
@@ -267,6 +276,12 @@ function keyPressed() {
 
 
     }
+}
+
+// === 新增：在移动端触碰屏幕也触发同样效果 ===
+function touchStarted() {
+    startAnimationMode();
+    return false;  // 阻止默认的滚动/缩放行为
 }
 
 function mousePressed() {
