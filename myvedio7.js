@@ -45,8 +45,10 @@ let fireworkInterval = 300;    // 最小间隔时间（单位：毫秒）
 let soundFireworkEnabled = false;
 
 function setup() {
-    canvas = createCanvas(1920, 1080); // 移除WEBGL模式，使用普通2D模式
+    // 用屏幕宽高，而不是固定 1920×1080
 
+    canvas = createCanvas(1920, 1080); // 移除WEBGL模式，使用普通2D模式
+    pixelDensity(1);  // 在性能较弱的设备上可提高流畅度
     // 创建离屏graphics对象用于绘制像素点
     pixelGraphics = createGraphics(width, height);
     pixelBuffer = createGraphics(width, height);
@@ -68,6 +70,12 @@ function setup() {
     // 创建音频输入
     mic = new p5.AudioIn();
     mic.start();
+}
+
+// 当窗口尺寸变化（旋转、resize）时自动调整
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    glow.radius = max(width, height) * 2.5;
 }
 
 function draw() {
@@ -251,6 +259,11 @@ function keyPressed() {
     }
 
     if (key === '7') {
+        // 确保第一次触发也做 mic.start()
+        if (!mic) {
+            mic = new p5.AudioIn();
+            mic.start();
+        }
         // === 修改：改为调用 startAnimationMode() ===
         startAnimationMode();
     }
@@ -280,8 +293,12 @@ function keyPressed() {
 
 // === 新增：在移动端触碰屏幕也触发同样效果 ===
 function touchStarted() {
+    // 启动音频输入
+    mic = new p5.AudioIn();
+    mic.start();
+    // 你的播放／全屏逻辑
     startAnimationMode();
-    return false;  // 阻止默认的滚动/缩放行为
+    return false;
 }
 
 function mousePressed() {

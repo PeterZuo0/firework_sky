@@ -2,7 +2,12 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <style>
+    /* canvas 占满整个屏幕 */
+    body, html { margin:0; padding:0; overflow:hidden; }
+    canvas { display:block; width:100vw; height:100vh; }
+  </style>
 
   <!-- PLEASE NO CHANGES BELOW THIS LINE (UNTIL I SAY SO) -->
   <script  type="text/javascript" src="libraries/p5.min.js"></script>
