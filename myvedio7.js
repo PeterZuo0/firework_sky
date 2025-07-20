@@ -39,7 +39,7 @@ let glow = {
 
 // 播放间隔
 let lastFireworkTime = 0;       // 上一次发射的时间
-let fireworkInterval = 400;    // 最小间隔时间（单位：毫秒）
+let fireworkInterval = 300;    // 最小间隔时间（单位：毫秒）
 
 // === 新增：声音触发烟花模式开关 ===
 let soundFireworkEnabled = false;
@@ -80,18 +80,18 @@ function draw() {
 
     // === 修改：只有在声音触发模式开启后，才用声音触发烟花 ===
     if (soundFireworkEnabled && vol > 0.01 && currentTime - lastFireworkTime > fireworkInterval) {
+        console.log(vol);
         if (nonBlackPixels.length > 0) {
             // 随机选择一个非黑色像素坐标
             let randomIndex = floor(random(nonBlackPixels.length));
             let selectedPixel = nonBlackPixels[randomIndex];
 
-            launchFireworkAt(selectedPixel.x + random(-1000, 1100), selectedPixel.y);
+            launchFireworkAt(selectedPixel.x + random(-1100, 1100), selectedPixel.y + random(-200, 100));
             console.log(`烟花发射！位置: (${selectedPixel.x}, ${selectedPixel.y}), 颜色: RGB(${selectedPixel.r}, ${selectedPixel.g}, ${selectedPixel.b})`);
             lastFireworkTime = currentTime; // 更新最后发射时间
         }
     }
 
-    console.log(vol);
 
     image(video2, 0, 0);
 
@@ -245,6 +245,27 @@ function keyPressed() {
         } else if (fsElement.msRequestFullscreen) {
             fsElement.msRequestFullscreen();
         }
+    }
+
+    if(key === '8'){
+        video.loop(); // 播放视频
+        video2.loop();
+        gifPerson = createImg('assets/透明底.gif');
+
+        gifPerson.position(0,-50);
+
+        let fsElement = document.documentElement; // 获取文档的根元素
+        if (fsElement.requestFullscreen) {
+            fsElement.requestFullscreen(); // 请求全屏
+        } else if (fsElement.mozRequestFullScreen) {
+            fsElement.mozRequestFullScreen(); // Firefox
+        } else if (fsElement.webkitRequestFullscreen) {
+            fsElement.webkitRequestFullscreen(); // Chrome, Safari, and Opera
+        } else if (fsElement.msRequestFullscreen) {
+            fsElement.msRequestFullscreen(); // IE/Edge
+        }
+
+
     }
 }
 
