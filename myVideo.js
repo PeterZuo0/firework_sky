@@ -270,16 +270,16 @@ function startAnimationMode() {
     };
     // document.documentElement.requestFullscreen();
     // —— 原生全屏调用 ——
-    const fsElem = document.documentElement;  // 整个页面
-    if (fsElem.requestFullscreen) {
-        fsElem.requestFullscreen();
-    } else if (fsElem.webkitRequestFullscreen) {      // Safari, old iOS
-        fsElem.webkitRequestFullscreen();
-    } else if (fsElem.mozRequestFullScreen) {          // Firefox
-        fsElem.mozRequestFullScreen();
-    } else if (fsElem.msRequestFullscreen) {           // IE/Edge
-        fsElem.msRequestFullscreen();
-    }
+    // const fsElem = document.documentElement;  // 整个页面
+    // if (fsElem.requestFullscreen) {
+    //     fsElem.requestFullscreen();
+    // } else if (fsElem.webkitRequestFullscreen) {      // Safari, old iOS
+    //     fsElem.webkitRequestFullscreen();
+    // } else if (fsElem.mozRequestFullScreen) {          // Firefox
+    //     fsElem.mozRequestFullScreen();
+    // } else if (fsElem.msRequestFullscreen) {           // IE/Edge
+    //     fsElem.msRequestFullscreen();
+    // }
 }
 
 function keyPressed() {
@@ -310,42 +310,37 @@ function keyPressed() {
 
 }
 
-// === 新增：在移动端触碰屏幕也触发同样效果 ===
 function touchStarted() {
-    if (!started) {
-        getAudioContext().resume().then(() => mic.start());
-        startAnimationMode();
-        // document.documentElement.requestFullscreen();
+    // 一定要在同一手势里同步执行下面几步
+    getAudioContext().resume();     // 唤醒 AudioContext
+    mic.start();                    // 启动麦克风
+
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen()
+            .then(() => console.log('全屏成功'))
+            .catch(err => console.warn('全屏失败：', err));
     } else {
-        getAudioContext().resume();
-        launchFireworkAt(mouseX+ random(-600,1100), mouseY+ random(-60,100));
+        console.warn('浏览器不支持 requestFullscreen');
     }
-    return false;  // 阻止浏览器默认滚动
+
+    startAnimationMode();
+    launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
+    return false;
 }
 
 function mousePressed() {
-    // 如果还没开始动画模式，先走启动逻辑
-    if (!started) {
-        getAudioContext().resume().then(() => mic.start());
-        startAnimationMode();
-        // fullscreen(true);
-
-    } else {
-        let mic_status = false
-        // 启动音频输入
-        if (!mic) {
-            mic = new p5.AudioIn();
-            mic.start()
-                .then(() => console.log('Mic started'))
-                .catch(err => console.error('Mic start failed', err));
-        }else{
-            mic_status = true
-            getAudioContext().resume();
-        }
-        console.log(`Okay: ${mic_status} and ${mic.getLevel()}`)
-        launchFireworkAt(mouseX+ random(-600,1100), mouseY+ random(-60,100));
-    }
+    getAudioContext().resume();
+    mic.start();
+    fullscreen(true);   // 如果桌面也想全屏
+    startAnimationMode();
+    launchFireworkAt(
+        mouseX + random(-600, 1100),
+        mouseY + random(-60, 100)
+    );
+    return false;
 }
+
 
 function updateNonBlackPixels() {
     nonBlackPixels = [];
