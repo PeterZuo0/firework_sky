@@ -247,7 +247,7 @@ function startAnimationMode() {
     });
 
     const offsetY = windowHeight * 0.10;
-    const cutHeight = windowHeight / 3 * 2
+    const cutHeight = windowHeight / 4 * 3
     const halfHeightRatio = cutHeight / 1080
     gifPerson.size(halfHeightRatio*1920, cutHeight);
 
