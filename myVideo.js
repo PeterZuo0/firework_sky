@@ -61,9 +61,19 @@ function setup() {
     pixelGraphics = createGraphics(width, height);
     pixelBuffer   = createGraphics(width, height);
 
-    video  = createVideo('assets/n_prople.mov'); video.hide();
+    video  = createVideo('assets/n_prople.mov');
+    video.hide();
+    video.elt.setAttribute('playsinline', '');        // iOS Safari
+    video.elt.setAttribute('webkit-playsinline', ''); // 老版 iOS WebKit
+    video.elt.muted = true;                           // 必须静音，才能允许自动或内联播放
+    video.elt.controls = false;                       // 彻底关闭原生控件
+
     video2 = createVideo('assets/back1.mp4');   video2.hide();
     grassPng = loadImage('assets/grass.png');
+    video2.elt.setAttribute('playsinline', '');
+    video2.elt.setAttribute('webkit-playsinline', '');
+    video2.elt.muted = true;
+    video2.elt.controls = false;
 
     textAlign(LEFT);
     noStroke();
@@ -71,7 +81,8 @@ function setup() {
     glow.radius = max(width, height) * 2.5; // Set glow radius beyond screen
 
     mic = new p5.AudioIn();
-    mic.start();                     // Start microphone input (must follow user gesture)
+    mic.start();
+
 }
 
 // ─── Handle window resize: update canvas and glow radius ─────────────────────
@@ -106,15 +117,19 @@ function draw() {
     // Update microphone volume
     vol = mic.getLevel();
     let now = millis();
+    // console.log(`Mic vol: ${vol}`)
     // Auto-launch fireworks on sound if enabled
     if (soundFireworkEnabled && vol > 0.01 && now - lastFireworkTime > fireworkInterval) {
         if (nonBlackPixels.length > 0) {
             let idx = floor(random(nonBlackPixels.length));
             let p = nonBlackPixels[idx];
-            launchFireworkAt(p.x + random(-1100, 1100), p.y + random(-200, 100));
+            launchFireworkAt(p.x + random(-600,500), p.y + random(-200, 100));
             console.log(`Firework Launch! volume at: ${vol}, position at: ${p.x}, ${p.y}`)
             lastFireworkTime = now;
         }
+    }
+    if (vol <= 0.005){
+        getAudioContext().resume();
     }
 
     // Draw background video
@@ -222,6 +237,9 @@ function startAnimationMode() {
     if (started) return;
     started = true;
     soundFireworkEnabled = true;
+
+    // mic.start();
+
     video.loop();
     video2.loop();
     gifPerson = createImg('assets/透明底.gif','',{
@@ -250,56 +268,45 @@ function startAnimationMode() {
             (windowHeight - gh) / 2 + offsetY
         );
     };
-
+    document.documentElement.requestFullscreen();
 }
 
 function keyPressed() {
+    if (!started) {
+        // mic.start()
+        startAnimationMode();
+    }
+
     if (key === ' ') {
         if (nonBlackPixels.length > 0) {
             let randomIndex = floor(random(nonBlackPixels.length));
             let selectedPixel = nonBlackPixels[randomIndex];
-            launchFireworkAt(selectedPixel.x + random(-600,1100), selectedPixel.y);
+            launchFireworkAt(selectedPixel.x + random(-600,500), selectedPixel.y);
             console.log(`烟花发射！位置: (${selectedPixel.x}, ${selectedPixel.y}), 颜色: RGB(${selectedPixel.r}, ${selectedPixel.g}, ${selectedPixel.b})`);
         }
         return false;
     }
 
     if (key === '6') {
-        Console.log("Refreshing ...");
         location.reload();
     }
 
     if (key === '7') {
-        // 确保第一次触发也做 mic.start()
-        if (!mic) {
-            mic = new p5.AudioIn();
-            mic.start();
-        }
+
         // === 修改：改为调用 startAnimationMode() ===
         startAnimationMode();
     }
 
-
-    if(key === '8'){
-        video.loop(); // 播放视频
-        video2.loop();
-        gifPerson = createImg('assets/透明底.gif');
-
-        gifPerson.position(0,-50);
-
-    }
 }
 
 // === 新增：在移动端触碰屏幕也触发同样效果 ===
 function touchStarted() {
-    // 启动音频输入
-    if (!mic) {
-        mic = new p5.AudioIn();
-        mic.start();
-    }
     if (!started) {
+        getAudioContext().resume().then(() => mic.start());
         startAnimationMode();
+        // document.documentElement.requestFullscreen();
     } else {
+        getAudioContext().resume();
         launchFireworkAt(mouseX+ random(-600,1100), mouseY+ random(-60,100));
     }
     return false;  // 阻止浏览器默认滚动
@@ -308,10 +315,23 @@ function touchStarted() {
 function mousePressed() {
     // 如果还没开始动画模式，先走启动逻辑
     if (!started) {
+        getAudioContext().resume().then(() => mic.start());
         startAnimationMode();
-    }
-    // 否则就在点击位置发射一束烟花
-    else {
+        // fullscreen(true);
+
+    } else {
+        let mic_status = false
+        // 启动音频输入
+        if (!mic) {
+            mic = new p5.AudioIn();
+            mic.start()
+                .then(() => console.log('Mic started'))
+                .catch(err => console.error('Mic start failed', err));
+        }else{
+            mic_status = true
+            getAudioContext().resume();
+        }
+        console.log(`Okay: ${mic_status} and ${mic.getLevel()}`)
         launchFireworkAt(mouseX+ random(-600,1100), mouseY+ random(-60,100));
     }
 }
