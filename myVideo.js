@@ -86,10 +86,10 @@ function setup() {
 }
 
 // ─── Handle window resize: update canvas and glow radius ─────────────────────
-function windowResized() {
-    resizeCanvas(windowWidth, windowHeight);
-    glow.radius = max(width, height) * 2.5;
-}
+// function windowResized() {
+//     resizeCanvas(windowWidth, windowHeight);
+//     glow.radius = max(width, height) * 2.5;
+// }
 
 // ─── Main render loop: show start screen or run animation ─────────────────────
 function draw() {
@@ -231,56 +231,49 @@ function launchFireworkAt(x, y) {
         ));
     }
 }
+// 在最顶部定义一个辅助函数
+function updateGifPosition() {
+    if (!gifPerson) return;
+    const gw = gifPerson.width;
+    const gh = gifPerson.height;
+    const offsetY = windowHeight * 0.10;  // 向下 10%
+    const x = (windowWidth  - gw) / 2;
+    const y = (windowHeight - gh) / 2 + offsetY;
+    gifPerson.position(x, y);
+}
 
-// ─── Start animation: enable sound trigger, loop videos, create GIF ────────
+// ─── Start animation ────────────────────────────────────────────────────
 function startAnimationMode() {
     if (started) return;
     started = true;
     soundFireworkEnabled = true;
 
-    // mic.start();
-
     video.loop();
     video2.loop();
-    gifPerson = createImg('assets/透明底.gif','',{
+
+    gifPerson = createImg('assets/透明底.gif', '', {
         parent: 'createImgContainer'
     });
+    // 设置大小
+    const cutHeight = windowHeight * 2/3;
+    const scale = cutHeight / 1080;
+    gifPerson.size(1920 * scale, cutHeight);
 
-    const offsetY = windowHeight * 0.10;
-    const cutHeight = windowHeight / 3 * 2;
-    const halfHeightRatio = cutHeight / 1080
-    gifPerson.size(halfHeightRatio*1920, cutHeight);
+    // GIF 加载完成后再定位
+    gifPerson.elt.onload = updateGifPosition;
 
-    // const gw = gifPerson.width;
-    // const gh = gifPerson.height;
-    // // 保证画布已创建好才能拿到 width/height
-    // gifPerson.position(
-    //     (windowWidth  - gw) / 2,
-    //     ((windowHeight - gh) / 2)
-    // );
-
-    // 如果你的 GIF 会动态拿不到宽高，可以用一个定时或 onload：
-    gifPerson.elt.onload = () => {
-        const gw = gifPerson.width;
-        const gh = gifPerson.height;
-        gifPerson.position(
-            (windowWidth  - gw) / 2,
-            (windowHeight - gh) / 2 + offsetY * 2
-        );
-    };
-    // document.documentElement.requestFullscreen();
-    // —— 原生全屏调用 ——
-    // const fsElem = document.documentElement;  // 整个页面
-    // if (fsElem.requestFullscreen) {
-    //     fsElem.requestFullscreen();
-    // } else if (fsElem.webkitRequestFullscreen) {      // Safari, old iOS
-    //     fsElem.webkitRequestFullscreen();
-    // } else if (fsElem.mozRequestFullScreen) {          // Firefox
-    //     fsElem.mozRequestFullScreen();
-    // } else if (fsElem.msRequestFullscreen) {           // IE/Edge
-    //     fsElem.msRequestFullscreen();
-    // }
+    // 立即做一次定位，防止 onload 慢
+    updateGifPosition();
 }
+
+// ─── Handle window resize ────────────────────────────────────────────────
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+    glow.radius = max(width, height) * 2.5;
+    // 画布尺寸变化时也更新 GIF 位置
+    updateGifPosition();
+}
+
 
 function keyPressed() {
     if (!started) {
@@ -310,14 +303,24 @@ function keyPressed() {
 
 }
 
-function touchStarted() {
-    // 一定要在同一手势里同步执行下面几步
-    getAudioContext().resume();     // 唤醒 AudioContext
+// function touchStarted() {
+//     // 一定要在同一手势里同步执行下面几步
+//     getAudioContext().resume();     // 唤醒 AudioContext
+//     mic.start();
+//
+//     document.documentElement.requestFullscreen()
+//         .catch(err => console.warn('全屏失败:', err));
+//
+//     position = startAnimationMode();
+//     launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
+//     return false;
+// }
+
+function touchEnded() {
+    // 这里是真正的用户手势末端，同步调用全屏
+    getAudioContext().resume();
     mic.start();
-
-    document.documentElement.requestFullscreen()
-        .catch(err => console.warn('全屏失败:', err));
-
+    fullscreen(true);   // 如果桌面也想全屏
     startAnimationMode();
     launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
     return false;
@@ -326,6 +329,7 @@ function touchStarted() {
 function mousePressed() {
     getAudioContext().resume();
     mic.start();
+
     fullscreen(true);   // 如果桌面也想全屏
     startAnimationMode();
     launchFireworkAt(
@@ -422,6 +426,17 @@ function startVideo() {
     video2.loop();
     gifPerson = createImg('assets/透明底.gif');
     gifPerson.position(0, -50);
+    let fsElement = document.documentElement;
+    if (fsElement.requestFullscreen) {
+        fsElement.requestFullscreen();
+    } else if (fsElement.mozRequestFullScreen) {
+        fsElement.mozRequestFullScreen();
+    } else if (fsElement.webkitRequestFullscreen) {
+        fsElement.webkitRequestFullscreen();
+    } else if (fsElement.msRequestFullscreen) {
+        fsElement.msRequestFullscreen();
+    }
+
 }
 
 
