@@ -268,7 +268,18 @@ function startAnimationMode() {
             (windowHeight - gh) / 2 + offsetY
         );
     };
-    document.documentElement.requestFullscreen();
+    // document.documentElement.requestFullscreen();
+    // —— 原生全屏调用 ——
+    const fsElem = document.documentElement;  // 整个页面
+    if (fsElem.requestFullscreen) {
+        fsElem.requestFullscreen();
+    } else if (fsElem.webkitRequestFullscreen) {      // Safari, old iOS
+        fsElem.webkitRequestFullscreen();
+    } else if (fsElem.mozRequestFullScreen) {          // Firefox
+        fsElem.mozRequestFullScreen();
+    } else if (fsElem.msRequestFullscreen) {           // IE/Edge
+        fsElem.msRequestFullscreen();
+    }
 }
 
 function keyPressed() {
@@ -317,7 +328,7 @@ function mousePressed() {
     if (!started) {
         getAudioContext().resume().then(() => mic.start());
         startAnimationMode();
-        fullscreen(true);
+        // fullscreen(true);
 
     } else {
         let mic_status = false
