@@ -317,7 +317,7 @@ function mousePressed() {
     if (!started) {
         getAudioContext().resume().then(() => mic.start());
         startAnimationMode();
-        // fullscreen(true);
+        fullscreen(true);
 
     } else {
         let mic_status = false
