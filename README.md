@@ -1,2 +1,2 @@
 # Click the link
-[Play around with this project](https://peterzuo0.github.io/firework_sky/)
+> [Play around with this project](https://peterzuo0.github.io/firework_sky/)
