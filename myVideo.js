@@ -313,16 +313,10 @@ function keyPressed() {
 function touchStarted() {
     // 一定要在同一手势里同步执行下面几步
     getAudioContext().resume();     // 唤醒 AudioContext
-    mic.start();                    // 启动麦克风
+    mic.start();
 
-    const elem = document.documentElement;
-    if (elem.requestFullscreen) {
-        elem.requestFullscreen()
-            .then(() => console.log('全屏成功'))
-            .catch(err => console.warn('全屏失败：', err));
-    } else {
-        console.warn('浏览器不支持 requestFullscreen');
-    }
+    document.documentElement.requestFullscreen()
+        .catch(err => console.warn('全屏失败:', err));
 
     startAnimationMode();
     launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
