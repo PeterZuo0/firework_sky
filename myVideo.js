@@ -247,7 +247,7 @@ function startAnimationMode() {
     });
 
     const offsetY = windowHeight * 0.10;
-    const cutHeight = windowHeight / 4 * 3
+    const cutHeight = windowHeight / 3 * 2;
     const halfHeightRatio = cutHeight / 1080
     gifPerson.size(halfHeightRatio*1920, cutHeight);
 
@@ -265,7 +265,7 @@ function startAnimationMode() {
         const gh = gifPerson.height;
         gifPerson.position(
             (windowWidth  - gw) / 2,
-            (windowHeight - gh) / 2 + offsetY
+            (windowHeight - gh) / 2 + offsetY * 2
         );
     };
     // document.documentElement.requestFullscreen();
