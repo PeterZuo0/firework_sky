@@ -242,6 +242,7 @@ function updateGifPosition() {
     gifPerson.position(x, y);
 }
 
+
 // ─── Start animation ────────────────────────────────────────────────────
 function startAnimationMode() {
     if (started) return;
@@ -331,7 +332,17 @@ function mousePressed() {
     getAudioContext().resume();
     mic.start();
     console.log("Mouse pressed")
-    //fullscreen(true);   // 如果桌面也想全屏
+    // fullscreen(true);   // 如果桌面也想全屏
+    let fsElement = document.documentElement;
+    if (fsElement.requestFullscreen) {
+        fsElement.requestFullscreen();
+    } else if (fsElement.mozRequestFullScreen) {
+        fsElement.mozRequestFullScreen();
+    } else if (fsElement.webkitRequestFullscreen) {
+        fsElement.webkitRequestFullscreen();
+    } else if (fsElement.msRequestFullscreen) {
+        fsElement.msRequestFullscreen();
+    }
     startAnimationMode();
     launchFireworkAt(
         mouseX + random(-600, 1100),
