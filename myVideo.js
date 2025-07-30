@@ -263,8 +263,8 @@ function startAnimationMode() {
     started = true;
     soundFireworkEnabled = true;
 
-    // video.loop();
-    // video2.loop();
+    video.loop();
+    video2.loop();
 
     gifPerson = createImg('assets/透明底.gif', '', {
         parent: 'createImgContainer'
@@ -293,8 +293,6 @@ function windowResized() {
 function keyPressed() {
     if (!started) {
         // mic.start()
-        video.loop();
-        video2.loop();
         startAnimationMode();
     }
 
@@ -335,18 +333,10 @@ function keyPressed() {
 
 function touchEnded() {
     // 这里是真正的用户手势末端，同步调用全屏
-    // ① 唤醒 AudioContext
     getAudioContext().resume();
-
-    // ② 启动麦克风
-    mic.start();
-
-    // ③ 播放视频——务必写在这里，确保是同步用户手势
-    video.loop();
-    video2.loop();
-
     console.log("Touched screen")
-    fullscreen(true);   // 如果桌面也想全屏
+    mic.start();
+    // fullscreen(true);   // 如果桌面也想全屏
     startAnimationMode();
     launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
     return false;
