@@ -1,6 +1,11 @@
 
 # Firework Sky
 
+---
+## 🕹️ Click the link
+### > This >> [Play around with this project](https://peterzuo0.github.io/firework_sky/) << This
+---
+## 🎆 What is this
 Emotion-Driven Audio Interaction Design for Game Players – Inspired by Sky: Children of the Light
 
 This project presents an innovative interaction experience where sound becomes the primary medium for emotional engagement. Drawing conceptual inspiration from Sky: Children of the Light, we have designed a pixel-style interactive webpage that transforms user voice input into a dynamic, audiovisual display. When users speak or play music into a microphone, fireworks bloom across the screen at randomized locations—ensuring that each session offers a one-of-a-kind visual spectacle.
@@ -37,12 +42,6 @@ By seamlessly blending voice interaction, emotional resonance, and visual storyt
 1. Allow microphone access when prompted.
 2. Tap or click anywhere on the canvas for starting.
 3. Make noise (clap, speak) or tap again to trigger fireworks.
-
----
-
-
-## 🕹️ Click the link
-> This >> [Play around with this project](https://peterzuo0.github.io/firework_sky/) << This
 ---
 ## 📄 License
 
