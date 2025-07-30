@@ -119,7 +119,7 @@ function draw() {
     let now = millis();
     // console.log(`Mic vol: ${vol}`)
     // Auto-launch fireworks on sound if enabled
-    if (soundFireworkEnabled && vol > 0.01 && now - lastFireworkTime > fireworkInterval) {
+    if (soundFireworkEnabled && vol > 0.02 && now - lastFireworkTime > fireworkInterval) {
         if (nonBlackPixels.length > 0) {
             let idx = floor(random(nonBlackPixels.length));
             let p = nonBlackPixels[idx];
@@ -316,21 +316,22 @@ function keyPressed() {
 //     return false;
 // }
 
-function touchEnded() {
-    // 这里是真正的用户手势末端，同步调用全屏
-    getAudioContext().resume();
-    mic.start();
-    fullscreen(true);   // 如果桌面也想全屏
-    startAnimationMode();
-    launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
-    return false;
-}
+// function touchEnded() {
+//     // 这里是真正的用户手势末端，同步调用全屏
+//     getAudioContext().resume();
+//     console.log("Touched screen")
+//     mic.start();
+//     //fullscreen(true);   // 如果桌面也想全屏
+//     startAnimationMode();
+//     launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
+//     return false;
+// }
 
 function mousePressed() {
     getAudioContext().resume();
     mic.start();
-
-    fullscreen(true);   // 如果桌面也想全屏
+    console.log("Mouse pressed")
+    //fullscreen(true);   // 如果桌面也想全屏
     startAnimationMode();
     launchFireworkAt(
         mouseX + random(-600, 1100),
