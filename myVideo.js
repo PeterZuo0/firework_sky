@@ -119,12 +119,12 @@ function draw() {
     let now = millis();
     // console.log(`Mic vol: ${vol}`)
     // Auto-launch fireworks on sound if enabled
-    if (soundFireworkEnabled && vol > 0.02 && now - lastFireworkTime > fireworkInterval) {
+    if (soundFireworkEnabled && vol > 0.012 && now - lastFireworkTime > fireworkInterval) {
         if (nonBlackPixels.length > 0) {
             let idx = floor(random(nonBlackPixels.length));
             let p = nonBlackPixels[idx];
             launchFireworkAt(p.x + random(-600,500), p.y + random(-200, 100));
-            console.log(`Firework Launch! volume at: ${vol}, position at: ${p.x}, ${p.y}`)
+            // console.log(`Firework Launch! volume at: ${vol}, position at: ${p.x}, ${p.y}`)
             lastFireworkTime = now;
         }
     }
@@ -287,7 +287,7 @@ function keyPressed() {
             let randomIndex = floor(random(nonBlackPixels.length));
             let selectedPixel = nonBlackPixels[randomIndex];
             launchFireworkAt(selectedPixel.x + random(-600,500), selectedPixel.y);
-            console.log(`烟花发射！位置: (${selectedPixel.x}, ${selectedPixel.y}), 颜色: RGB(${selectedPixel.r}, ${selectedPixel.g}, ${selectedPixel.b})`);
+            // console.log(`烟花发射！位置: (${selectedPixel.x}, ${selectedPixel.y}), 颜色: RGB(${selectedPixel.r}, ${selectedPixel.g}, ${selectedPixel.b})`);
         }
         return false;
     }
@@ -303,43 +303,16 @@ function keyPressed() {
     }
 
 }
-
-// function touchStarted() {
-//     // 一定要在同一手势里同步执行下面几步
-//     getAudioContext().resume();     // 唤醒 AudioContext
-//     mic.start();
-//
-//     document.documentElement.requestFullscreen()
-//         .catch(err => console.warn('全屏失败:', err));
-//
-//     position = startAnimationMode();
-//     launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
-//     return false;
-// }
-
 function touchEnded() {
     // 这里是真正的用户手势末端，同步调用全屏
     getAudioContext().resume();
-    console.log("Touched screen")
+    // console.log("Touched screen")
     mic.start();
     //fullscreen(true);   // 如果桌面也想全屏
     startAnimationMode();
     launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
     return false;
 }
-
-// function mousePressed() {
-//     getAudioContext().resume();
-//     mic.start();
-//     console.log("Mouse pressed")
-//     //fullscreen(true);   // 如果桌面也想全屏
-//     startAnimationMode();
-//     launchFireworkAt(
-//         mouseX + random(-600, 1100),
-//         mouseY + random(-60, 100)
-//     );
-//     return false;
-// }
 
 
 function updateNonBlackPixels() {
@@ -370,7 +343,6 @@ function updateNonBlackPixels() {
             }
         }
     }
-    // console.log(`检测到 ${nonBlackPixels.length} 个非黑色像素 (限制: ${maxPixels})`);
 }
 
 function updatePixelGraphics() {
@@ -411,36 +383,12 @@ function adjustPerformance() {
     let fps = frameRate();
     if (fps < 30 && updateInterval < 1000) {
         updateInterval += 100;
-        console.log(`性能调整: 更新间隔增加到 ${updateInterval}ms`);
+        // console.log(`性能调整: 更新间隔增加到 ${updateInterval}ms`);
     } else if (fps > 50 && updateInterval > 300) {
         updateInterval -= 50;
-        console.log(`性能调整: 更新间隔减少到 ${updateInterval}ms`);
+        // console.log(`性能调整: 更新间隔减少到 ${updateInterval}ms`);
     }
 }
-
-function pauseVideo() {
-    video.time(0);
-    video.pause();
-}
-
-// function startVideo() {
-//     video.loop();
-//     video2.loop();
-//     gifPerson = createImg('assets/透明底.gif');
-//     // gifPerson.position(0, -50);
-//     let fsElement = document.documentElement;
-//     if (fsElement.requestFullscreen) {
-//         fsElement.requestFullscreen();
-//     } else if (fsElement.mozRequestFullScreen) {
-//         fsElement.mozRequestFullScreen();
-//     } else if (fsElement.webkitRequestFullscreen) {
-//         fsElement.webkitRequestFullscreen();
-//     } else if (fsElement.msRequestFullscreen) {
-//         fsElement.msRequestFullscreen();
-//     }
-//
-// }
-
 
 // 每5秒自动调整性能
 setInterval(() => {
