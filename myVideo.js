@@ -54,6 +54,19 @@ let isProcessing = false;   // Prevent overlapping analysis calls
 let lastFireworkTime = 0;   // Timestamp of last firework launch
 let fireworkInterval = 300; // Minimum ms interval between auto fireworks
 
+
+// let grassPng;
+let gifSrc;      // GIF 的 URL
+
+function preload() {
+    // 这两行会阻塞到下载完成，才进 setup()
+    grassPng = loadImage('assets/grass.png');
+    gifSrc   = createImg('assets/透明底.gif', '', {
+        parent: 'createImgContainer'
+    });
+}
+
+
 // ─── p5.js setup: initialize canvas, load assets, start audio ────────────────
 function setup() {
     canvas = createCanvas(windowWidth, windowHeight);
@@ -69,7 +82,8 @@ function setup() {
     video.elt.controls = false;                       // 彻底关闭原生控件
 
     video2 = createVideo('assets/back1.mp4');   video2.hide();
-    grassPng = loadImage('assets/grass.png');
+    // grassPng = loadImage('assets/grass.png');
+    preload()
     video2.elt.setAttribute('playsinline', '');
     video2.elt.setAttribute('webkit-playsinline', '');
     video2.elt.muted = true;
@@ -119,7 +133,7 @@ function draw() {
     let now = millis();
     // console.log(`Mic vol: ${vol}`)
     // Auto-launch fireworks on sound if enabled
-    if (soundFireworkEnabled && vol > 0.02 && now - lastFireworkTime > fireworkInterval) {
+    if (soundFireworkEnabled && vol > 0.015 && now - lastFireworkTime > fireworkInterval) {
         if (nonBlackPixels.length > 0) {
             let idx = floor(random(nonBlackPixels.length));
             let p = nonBlackPixels[idx];
@@ -249,8 +263,8 @@ function startAnimationMode() {
     started = true;
     soundFireworkEnabled = true;
 
-    video.loop();
-    video2.loop();
+    // video.loop();
+    // video2.loop();
 
     gifPerson = createImg('assets/透明底.gif', '', {
         parent: 'createImgContainer'
@@ -279,6 +293,8 @@ function windowResized() {
 function keyPressed() {
     if (!started) {
         // mic.start()
+        video.loop();
+        video2.loop();
         startAnimationMode();
     }
 
@@ -319,9 +335,17 @@ function keyPressed() {
 
 function touchEnded() {
     // 这里是真正的用户手势末端，同步调用全屏
+    // ① 唤醒 AudioContext
     getAudioContext().resume();
-    console.log("Touched screen")
+
+    // ② 启动麦克风
     mic.start();
+
+    // ③ 播放视频——务必写在这里，确保是同步用户手势
+    video.loop();
+    video2.loop();
+
+    console.log("Touched screen")
     fullscreen(true);   // 如果桌面也想全屏
     startAnimationMode();
     launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
