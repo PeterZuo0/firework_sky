@@ -426,17 +426,17 @@ function startVideo() {
     video.loop();
     video2.loop();
     gifPerson = createImg('assets/透明底.gif');
-    gifPerson.position(0, -50);
-    let fsElement = document.documentElement;
-    if (fsElement.requestFullscreen) {
-        fsElement.requestFullscreen();
-    } else if (fsElement.mozRequestFullScreen) {
-        fsElement.mozRequestFullScreen();
-    } else if (fsElement.webkitRequestFullscreen) {
-        fsElement.webkitRequestFullscreen();
-    } else if (fsElement.msRequestFullscreen) {
-        fsElement.msRequestFullscreen();
-    }
+    // gifPerson.position(0, -50);
+    // let fsElement = document.documentElement;
+    // if (fsElement.requestFullscreen) {
+    //     fsElement.requestFullscreen();
+    // } else if (fsElement.mozRequestFullScreen) {
+    //     fsElement.mozRequestFullScreen();
+    // } else if (fsElement.webkitRequestFullscreen) {
+    //     fsElement.webkitRequestFullscreen();
+    // } else if (fsElement.msRequestFullscreen) {
+    //     fsElement.msRequestFullscreen();
+    // }
 
 }
 
