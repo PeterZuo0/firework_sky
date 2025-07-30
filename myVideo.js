@@ -317,39 +317,29 @@ function keyPressed() {
 //     return false;
 // }
 
-// function touchEnded() {
-//     // 这里是真正的用户手势末端，同步调用全屏
-//     getAudioContext().resume();
-//     console.log("Touched screen")
-//     mic.start();
-//     //fullscreen(true);   // 如果桌面也想全屏
-//     startAnimationMode();
-//     launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
-//     return false;
-// }
-
-function mousePressed() {
+function touchEnded() {
+    // 这里是真正的用户手势末端，同步调用全屏
     getAudioContext().resume();
+    console.log("Touched screen")
     mic.start();
-    console.log("Mouse pressed")
-    // fullscreen(true);   // 如果桌面也想全屏
-    let fsElement = document.documentElement;
-    if (fsElement.requestFullscreen) {
-        fsElement.requestFullscreen();
-    } else if (fsElement.mozRequestFullScreen) {
-        fsElement.mozRequestFullScreen();
-    } else if (fsElement.webkitRequestFullscreen) {
-        fsElement.webkitRequestFullscreen();
-    } else if (fsElement.msRequestFullscreen) {
-        fsElement.msRequestFullscreen();
-    }
+    fullscreen(true);   // 如果桌面也想全屏
     startAnimationMode();
-    launchFireworkAt(
-        mouseX + random(-600, 1100),
-        mouseY + random(-60, 100)
-    );
+    launchFireworkAt(mouseX + random(-600,1100), mouseY + random(-60,100));
     return false;
 }
+
+// function mousePressed() {
+//     getAudioContext().resume();
+//     mic.start();
+//     console.log("Mouse pressed")
+//     //fullscreen(true);   // 如果桌面也想全屏
+//     startAnimationMode();
+//     launchFireworkAt(
+//         mouseX + random(-600, 1100),
+//         mouseY + random(-60, 100)
+//     );
+//     return false;
+// }
 
 
 function updateNonBlackPixels() {
@@ -433,23 +423,23 @@ function pauseVideo() {
     video.pause();
 }
 
-function startVideo() {
-    video.loop();
-    video2.loop();
-    gifPerson = createImg('assets/透明底.gif');
-    // gifPerson.position(0, -50);
-    // let fsElement = document.documentElement;
-    // if (fsElement.requestFullscreen) {
-    //     fsElement.requestFullscreen();
-    // } else if (fsElement.mozRequestFullScreen) {
-    //     fsElement.mozRequestFullScreen();
-    // } else if (fsElement.webkitRequestFullscreen) {
-    //     fsElement.webkitRequestFullscreen();
-    // } else if (fsElement.msRequestFullscreen) {
-    //     fsElement.msRequestFullscreen();
-    // }
-
-}
+// function startVideo() {
+//     video.loop();
+//     video2.loop();
+//     gifPerson = createImg('assets/透明底.gif');
+//     // gifPerson.position(0, -50);
+//     let fsElement = document.documentElement;
+//     if (fsElement.requestFullscreen) {
+//         fsElement.requestFullscreen();
+//     } else if (fsElement.mozRequestFullScreen) {
+//         fsElement.mozRequestFullScreen();
+//     } else if (fsElement.webkitRequestFullscreen) {
+//         fsElement.webkitRequestFullscreen();
+//     } else if (fsElement.msRequestFullscreen) {
+//         fsElement.msRequestFullscreen();
+//     }
+//
+// }
 
 
 // 每5秒自动调整性能
